@@ -73,7 +73,7 @@ def get_settings() -> Settings:
     >>> from sinanofactory.config import get_settings
     >>> get_settings.cache_clear()
     """
-    return Settings()  # type: ignore[call-arg]
+    return Settings()
 
 
 __all__ = ["Settings", "get_settings"]

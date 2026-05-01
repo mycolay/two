@@ -70,15 +70,15 @@ def _smiles_to_inchikey(smiles: str) -> str:
     fallbacks here. Document this in any RDKit-free pipeline.
     """
     try:
-        from rdkit import Chem  # type: ignore[import-not-found]
-        from rdkit.Chem import inchi  # type: ignore[import-not-found]
+        from rdkit import Chem
+        from rdkit.Chem import inchi
     except ImportError:
         return _deterministic_fallback_inchikey(smiles)
 
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
         raise ValueError(f"RDKit could not parse SMILES: {smiles!r}.")
-    key = inchi.MolToInchiKey(mol)
+    key: str = inchi.MolToInchiKey(mol)  # type: ignore[no-untyped-call]
     if not key:
         raise ValueError(f"RDKit produced empty InChIKey for SMILES: {smiles!r}.")
     return key

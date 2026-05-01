@@ -76,7 +76,7 @@ class NanoparticleSpec(BaseModel):
 
     def _identity_dict(self) -> dict[str, Any]:
         """Dump the spec excluding metadata fields."""
-        return self.model_dump(mode="json", exclude=self._METADATA_FIELDS)
+        return self.model_dump(mode="json", exclude=set(self._METADATA_FIELDS))
 
     @property
     def short_id(self) -> str:
