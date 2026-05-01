@@ -1,0 +1,152 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python.terminal.activateEnvironment": true,
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.analysis.typeCheckingMode": "strict",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.indexing": true,
+  "python.analysis.userFileIndexingLimit": 10000,
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": [
+    "tests"
+  ],
+  "python.testing.unittestEnabled": false,
+
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll.ruff": "explicit"
+    },
+    "editor.rulers": [88, 100],
+    "editor.tabSize": 4
+  },
+  "[json][jsonc][yaml][toml][markdown]": {
+    "editor.tabSize": 2
+  },
+
+  "ruff.lint.select": [
+    "E", "F", "I", "B", "UP", "N", "RUF", "ANN", "PTH", "SIM", "C4", "PT"
+  ],
+  "ruff.lint.ignore": [
+    "ANN101",
+    "ANN102",
+    "D100",
+    "D104"
+  ],
+
+  "mypy-type-checker.args": [
+    "--strict",
+    "--ignore-missing-imports",
+    "--show-error-codes"
+  ],
+  "mypy-type-checker.importStrategy": "fromEnvironment",
+
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.mypy_cache": true,
+    "**/.ruff_cache": true,
+    "**/*.egg-info": true,
+    "**/.coverage": true
+  },
+  "files.watcherExclude": {
+    "**/.venv/**": true,
+    "**/data/raw/**": true,
+    "**/data/trajectories/**": true,
+    "**/.dvc/cache/**": true,
+    "**/mlruns/**": true
+  },
+  "search.exclude": {
+    "**/.venv": true,
+    "**/data/raw": true,
+    "**/data/trajectories": true,
+    "**/.dvc/cache": true,
+    "**/mlruns": true,
+    "**/htmlcov": true,
+    "**/site": true
+  },
+
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.minimap.enabled": false,
+  "editor.suggest.preview": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.stickyScroll.enabled": true,
+
+  "terminal.integrated.defaultProfile.windows": "WSL Ubuntu-24.04",
+  "terminal.integrated.profiles.windows": {
+    "WSL Ubuntu-24.04": {
+      "path": "wsl.exe",
+      "args": ["-d", "Ubuntu-24.04"]
+    }
+  },
+  "terminal.integrated.scrollback": 50000,
+  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.smoothScrolling": true,
+
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "gitlens.codeLens.enabled": false,
+
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.{yml,yaml}",
+    "https://json.schemastore.org/docker-compose.json": "docker-compose*.{yml,yaml}",
+    "https://raw.githubusercontent.com/PrefectHQ/prefect/main/src/prefect/server/schemas/schemas.json": "prefect.{yml,yaml}"
+  },
+
+  "sqltools.connections": [
+    {
+      "name": "Si nano Factory (local)",
+      "driver": "PostgreSQL",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "database": "factory",
+      "username": "factory",
+      "askForPassword": true
+    }
+  ],
+
+  "cSpell.words": [
+    "anthropic",
+    "ASE",
+    "asyncio",
+    "BPF",
+    "extxyz",
+    "factor",
+    "GLYMO",
+    "GPU4PySCF",
+    "HBM4",
+    "HMDS",
+    "InChIKey",
+    "Janus",
+    "LAMMPS",
+    "Langevin",
+    "MACE",
+    "MACECalculator",
+    "Melnyk",
+    "MLflow",
+    "MLIP",
+    "NEMD",
+    "NequIP",
+    "ORCA",
+    "ORCAs",
+    "Packmol",
+    "PLUMED",
+    "Prefect",
+    "PySCF",
+    "Pydantic",
+    "RDKit",
+    "REE",
+    "silanol",
+    "Stober",
+    "trimethylsilyl",
+    "umbrella",
+    "Подати",
+    "сорбент",
+    "функціонал"
+  ]
+}

@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-test:
+    name: Lint + Type-check + Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: |
+          uv venv
+          source .venv/bin/activate
+          uv pip install -e ".[dev,chem]"
+
+      - name: Ruff (lint + format check)
+        run: |
+          source .venv/bin/activate
+          ruff check sinanofactory tests
+          ruff format --check sinanofactory tests
+
+      - name: Mypy (strict, on core only for v0.0.1)
+        run: |
+          source .venv/bin/activate
+          mypy sinanofactory/core sinanofactory/cli.py sinanofactory/config.py
+
+      - name: Pytest (smoke + unit, with coverage)
+        run: |
+          source .venv/bin/activate
+          pytest --cov --cov-report=term-missing -m "smoke or unit"
+
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.12'
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: false
+        continue-on-error: true

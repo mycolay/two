@@ -1,0 +1,39 @@
+# Default: text files normalised to LF in the repo
+* text=auto eol=lf
+
+# Source / config — explicit LF
+*.py    text eol=lf
+*.toml  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
+*.cfg   text eol=lf
+*.ini   text eol=lf
+*.txt   text eol=lf
+*.sh    text eol=lf
+
+# Windows-specific scripts keep CRLF
+*.bat   text eol=crlf
+*.ps1   text eol=crlf
+
+# Binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.pdf   binary
+*.zip   binary
+*.tar   binary
+*.gz    binary
+*.so    binary
+*.dll   binary
+*.exe   binary
+*.xyz   binary
+*.zarr  binary
+*.h5    binary
+*.dump  binary
+*.lammpstrj binary
+
+# GitHub linguist
+*.md    linguist-documentation
+docs/*  linguist-documentation

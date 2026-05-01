@@ -1,0 +1,221 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+# ============================================================================
+# Project metadata
+# ============================================================================
+[project]
+name = "si-nano-factory"
+description = "AI-driven multiscale platform for functionalised silica nanoparticles (Two-Dimensional World)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "M. Kolisnyk", email = "mycolay@gmail.com" },
+    { name = "Inna Melnyk" },
+]
+keywords = ["nanoparticles", "silica", "MACE", "molecular-dynamics", "DFT", "materials-discovery"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Chemistry",
+]
+dynamic = ["version"]
+
+# Core runtime — minimum viable, no GPU/HPC deps here
+dependencies = [
+    "pydantic>=2.7,<3",
+    "pydantic-settings>=2.3,<3",
+    "typer>=0.12,<1",
+    "rich>=13.7,<14",
+    "platformdirs>=4.2,<5",
+    "tomli-w>=1.0,<2",
+]
+
+[project.optional-dependencies]
+# Development tooling — lint, test, docs
+dev = [
+    "pytest>=8.2,<9",
+    "pytest-cov>=5.0,<6",
+    "pytest-asyncio>=0.23,<1",
+    "hypothesis>=6.103,<7",
+    "ruff>=0.5,<1",
+    "mypy>=1.10,<2",
+    "pre-commit>=3.7,<4",
+    "mkdocs-material>=9.5,<10",
+    "mkdocstrings[python]>=0.25,<1",
+]
+
+# Cheminformatics + atomistic — needed for core builders + screening
+chem = [
+    "rdkit>=2024.3.1",
+    "ase>=3.23,<4",
+    "numpy>=1.26,<3",
+    "scipy>=1.13,<2",
+]
+
+# GPU stack — pinned to known-good CUDA/PyTorch combo for MACE 0.3.x
+# Install with: uv pip install -e ".[gpu]" --extra-index-url https://download.pytorch.org/whl/cu121
+gpu = [
+    "torch==2.3.1",
+    "mace-torch>=0.3.10,<0.4",
+    "e3nn>=0.5.1,<0.6",
+]
+
+# Orchestration + persistence (for Phase 1+ when actually wired up)
+orchestration = [
+    "prefect>=2.19,<3",
+    "sqlalchemy[asyncio]>=2.0,<3",
+    "asyncpg>=0.29,<1",
+    "alembic>=1.13,<2",
+    "minio>=7.2,<8",
+    "mlflow>=2.13,<3",
+    "dvc[s3]>=3.50,<4",
+    "fastapi>=0.110,<1",
+    "uvicorn[standard]>=0.30,<1",
+]
+
+# HPC backends — Phase 2+
+hpc = [
+    "dask-jobqueue>=0.8,<1",
+    "paramiko>=3.4,<4",
+    "boto3>=1.34,<2",
+]
+
+# UI / dashboard — Phase 1.5+
+ui = [
+    "streamlit>=1.35,<2",
+    "py3Dmol>=2.4,<3",
+    "plotly>=5.22,<6",
+]
+
+# Convenience: install everything
+all = [
+    "si-nano-factory[dev,chem,orchestration,hpc,ui]",
+]
+
+[project.scripts]
+factory = "sinanofactory.cli:app"
+
+[project.urls]
+Documentation = "https://github.com/mycolay/si-nano-factory#readme"
+Issues = "https://github.com/mycolay/si-nano-factory/issues"
+Source = "https://github.com/mycolay/si-nano-factory"
+
+# ============================================================================
+# Hatch (build) — version source
+# ============================================================================
+[tool.hatch.version]
+path = "sinanofactory/version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["sinanofactory"]
+
+# ============================================================================
+# Ruff — lint + format (replaces black + isort + flake8)
+# ============================================================================
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["prestart", "data", ".venv"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "N",    # pep8-naming
+    "RUF",  # ruff-specific
+    "ANN",  # flake8-annotations
+    "PTH",  # flake8-use-pathlib
+    "SIM",  # flake8-simplify
+    "C4",   # flake8-comprehensions
+    "PT",   # flake8-pytest-style
+    "TID",  # flake8-tidy-imports
+    "ARG",  # flake8-unused-arguments
+    "ERA",  # eradicate (commented-out code)
+]
+ignore = [
+    "ANN401",  # dynamically typed expressions (Any)
+    "E501",    # line too long (formatter handles)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN", "ARG", "RUF043"]                         # tests are less strict; literal regex is fine
+"sinanofactory/cli.py" = ["B008", "UP007", "UP045", "RUF022"] # Typer-idiomatic
+"sinanofactory/core/__init__.py" = ["RUF022", "ERA001"]       # public re-export ordered + sectioned for humans
+"sinanofactory/core/environment.py" = ["N815"]                # _K, _M, pH are physics units, not camelCase
+
+[tool.ruff.lint.isort]
+known-first-party = ["sinanofactory"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# ============================================================================
+# Mypy — type checking
+# ============================================================================
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_return_any = true
+ignore_missing_imports = true
+exclude = ["prestart/", "data/", ".venv/", "tests/fixtures/"]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_untyped_decorators = false
+
+# ============================================================================
+# Pytest
+# ============================================================================
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--showlocals",
+]
+testpaths = ["tests"]
+markers = [
+    "smoke: minimal end-to-end sanity tests (must always pass)",
+    "unit: fast pure-function tests",
+    "integration: tests that touch external services (DB, MinIO, GPU)",
+    "slow: tests that take >5s",
+    "gpu: tests requiring CUDA",
+]
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning:pkg_resources",
+]
+
+[tool.coverage.run]
+source = ["sinanofactory"]
+branch = true
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_empty = true
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+]

@@ -1,0 +1,80 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+build/
+dist/
+develop-eggs/
+.eggs/
+htmlcov/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE / editors (keep .vscode/ shared, ignore user overrides)
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.vscode/launch.json
+.vscode/tasks.json
+
+# Project-local secrets
+.env
+.env.local
+*.pem
+*.key
+
+# Data / artefacts (DVC-managed)
+data/raw/
+data/trajectories/
+data/processed/
+data/screening/
+mlruns/
+artifacts/
+checkpoints/
+
+# Compiled science outputs (large)
+*.xyz
+*.dump
+*.lammpstrj
+*.h5
+*.zarr/
+
+# Allow specific small reference files
+!data/reference/*.xyz
+!tests/fixtures/*.xyz
+
+# Logs
+*.log
+logs/
+
+# Built docs site
+site/
+
+# DVC
+.dvc/cache/
+.dvc/tmp/
+.dvc/config.local
+
+# OS-specific
+desktop.ini
+
+# Claude Code
+.claude/projects/
